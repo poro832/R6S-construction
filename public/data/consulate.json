@@ -1,0 +1,35 @@
+{
+  "mapId": "consulate",
+  "mapName": "Consulate",
+  "floors": [
+    { "id": "basement", "label": "지하", "image": "consulate_b.jpg" },
+    { "id": "1f",       "label": "1층",  "image": "consulate_1f.jpg" },
+    { "id": "2f",       "label": "2층",  "image": "consulate_2f.jpg" }
+  ],
+  "sites": [
+    {
+      "id": "basement-garage-cafeteria",
+      "label": "지하 차고/식당",
+      "defaultFloor": "basement",
+      "reinforcements": []
+    },
+    {
+      "id": "1f-lobby-piano",
+      "label": "1F 로비/피아노",
+      "defaultFloor": "1f",
+      "reinforcements": []
+    },
+    {
+      "id": "2f-meeting-front",
+      "label": "2F 회의실/접수처",
+      "defaultFloor": "2f",
+      "reinforcements": []
+    },
+    {
+      "id": "2f-archives-tellers",
+      "label": "2F 영사실/관사",
+      "defaultFloor": "2f",
+      "reinforcements": []
+    }
+  ]
+}
