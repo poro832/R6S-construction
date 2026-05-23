@@ -1,0 +1,140 @@
+#tactical-root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: sans-serif;
+  color: #eee;
+  background: #111;
+  min-height: 100vh;
+}
+
+.t-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+}
+
+.t-header .home-link {
+  color: #aaa;
+  text-decoration: none;
+}
+
+.t-header .home-link:hover {
+  color: #fff;
+}
+
+.t-header h1 {
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.t-section {
+  margin: 16px 0;
+}
+
+.t-section-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.t-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.t-button {
+  background: #222;
+  color: #ddd;
+  border: 1px solid #444;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.t-button:hover {
+  background: #333;
+}
+
+.t-button.active {
+  background: #b33;
+  color: #fff;
+  border-color: #b33;
+}
+
+.t-options {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.t-floorplan-wrap {
+  position: relative;
+  display: inline-block;
+  margin-top: 12px;
+  max-width: 100%;
+}
+
+.t-floorplan-wrap img.t-floorplan {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.t-marker-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.t-marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: #e22;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.t-marker[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 16px;
+  top: -4px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.t-legend {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.t-legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e22;
+  margin-right: 6px;
+  vertical-align: middle;
+}
