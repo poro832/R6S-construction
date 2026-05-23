@@ -4,7 +4,8 @@
   const state = {
     data: null,
     root: null,
-    activeSiteId: null
+    activeSiteId: null,
+    activeFloorId: null
   };
 
   function init() {
@@ -30,6 +31,7 @@
         state.data = data;
         if (data.sites && data.sites.length > 0) {
           state.activeSiteId = data.sites[0].id;
+          state.activeFloorId = data.sites[0].defaultFloor;
         }
         renderAll();
       })
@@ -39,10 +41,32 @@
       });
   }
 
+  function getActiveSite() {
+    return state.data.sites.find(function (s) {
+      return s.id === state.activeSiteId;
+    });
+  }
+
+  function getFloorById(floorId) {
+    return state.data.floors.find(function (f) {
+      return f.id === floorId;
+    });
+  }
+
+  function getFloorsWithMarkers(site) {
+    const ids = {};
+    (site.reinforcements || []).forEach(function (m) {
+      ids[m.floor] = true;
+    });
+    return ids;
+  }
+
   function renderAll() {
     state.root.innerHTML = "";
     state.root.appendChild(renderHeader());
     state.root.appendChild(renderSiteSection());
+    state.root.appendChild(renderFloorSection());
+    state.root.appendChild(renderFloorplan());
   }
 
   function renderHeader() {
@@ -81,6 +105,7 @@
       btn.textContent = site.label;
       btn.addEventListener("click", function () {
         state.activeSiteId = site.id;
+        state.activeFloorId = site.defaultFloor;
         renderAll();
       });
       row.appendChild(btn);
@@ -88,6 +113,56 @@
 
     section.appendChild(row);
     return section;
+  }
+
+  function renderFloorSection() {
+    const section = document.createElement("div");
+    section.className = "t-section";
+
+    const label = document.createElement("div");
+    label.className = "t-section-label";
+    label.textContent = "층";
+    section.appendChild(label);
+
+    const row = document.createElement("div");
+    row.className = "t-button-row";
+
+    const site = getActiveSite();
+    const markerFloors = getFloorsWithMarkers(site);
+
+    state.data.floors.forEach(function (floor) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "t-button" + (floor.id === state.activeFloorId ? " active" : "");
+      const hasMarkers = !!markerFloors[floor.id];
+      btn.textContent = floor.label + (hasMarkers ? " *" : "");
+      btn.addEventListener("click", function () {
+        state.activeFloorId = floor.id;
+        renderAll();
+      });
+      row.appendChild(btn);
+    });
+
+    section.appendChild(row);
+    return section;
+  }
+
+  function renderFloorplan() {
+    const wrap = document.createElement("div");
+    wrap.className = "t-floorplan-wrap";
+
+    const floor = getFloorById(state.activeFloorId);
+    if (!floor) {
+      return wrap;
+    }
+
+    const img = document.createElement("img");
+    img.className = "t-floorplan";
+    img.src = floor.image;
+    img.alt = floor.label;
+
+    wrap.appendChild(img);
+    return wrap;
   }
 
   if (document.readyState === "loading") {
