@@ -160,8 +160,27 @@
     img.className = "t-floorplan";
     img.src = floor.image;
     img.alt = floor.label;
-
     wrap.appendChild(img);
+
+    const layer = document.createElement("div");
+    layer.className = "t-marker-layer";
+
+    const site = getActiveSite();
+    (site.reinforcements || []).forEach(function (m) {
+      if (m.floor !== state.activeFloorId) {
+        return;
+      }
+      const marker = document.createElement("div");
+      marker.className = "t-marker";
+      marker.style.left = (m.x * 100) + "%";
+      marker.style.top = (m.y * 100) + "%";
+      if (m.note) {
+        marker.setAttribute("title", m.note);
+      }
+      layer.appendChild(marker);
+    });
+
+    wrap.appendChild(layer);
     return wrap;
   }
 
