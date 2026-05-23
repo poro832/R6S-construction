@@ -1,6 +1,12 @@
 (function () {
   "use strict";
 
+  const state = {
+    data: null,
+    root: null,
+    activeSiteId: null
+  };
+
   function init() {
     const root = document.getElementById("tactical-root");
     if (!root) {
@@ -12,6 +18,7 @@
       console.error("[tactical] data-map attribute missing on #tactical-root");
       return;
     }
+    state.root = root;
     fetch("../data/" + mapId + ".json")
       .then(function (res) {
         if (!res.ok) {
@@ -20,7 +27,11 @@
         return res.json();
       })
       .then(function (data) {
-        render(root, data);
+        state.data = data;
+        if (data.sites && data.sites.length > 0) {
+          state.activeSiteId = data.sites[0].id;
+        }
+        renderAll();
       })
       .catch(function (err) {
         console.error("[tactical] failed to load data:", err);
@@ -28,9 +39,13 @@
       });
   }
 
-  function render(root, data) {
-    root.innerHTML = "";
+  function renderAll() {
+    state.root.innerHTML = "";
+    state.root.appendChild(renderHeader());
+    state.root.appendChild(renderSiteSection());
+  }
 
+  function renderHeader() {
     const header = document.createElement("div");
     header.className = "t-header";
 
@@ -40,11 +55,39 @@
     home.textContent = "← R6S MAPS";
 
     const title = document.createElement("h1");
-    title.textContent = data.mapName.toUpperCase();
+    title.textContent = state.data.mapName.toUpperCase();
 
     header.appendChild(home);
     header.appendChild(title);
-    root.appendChild(header);
+    return header;
+  }
+
+  function renderSiteSection() {
+    const section = document.createElement("div");
+    section.className = "t-section";
+
+    const label = document.createElement("div");
+    label.className = "t-section-label";
+    label.textContent = "사이트 선택";
+    section.appendChild(label);
+
+    const row = document.createElement("div");
+    row.className = "t-button-row";
+
+    state.data.sites.forEach(function (site) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "t-button" + (site.id === state.activeSiteId ? " active" : "");
+      btn.textContent = site.label;
+      btn.addEventListener("click", function () {
+        state.activeSiteId = site.id;
+        renderAll();
+      });
+      row.appendChild(btn);
+    });
+
+    section.appendChild(row);
+    return section;
   }
 
   if (document.readyState === "loading") {
