@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  // Bump this when floorplan images change so browsers fetch fresh copies.
+  const ASSET_VERSION = "20260531a";
+
   const state = {
     data: null,
     root: null,
@@ -35,6 +38,8 @@
         if (data.sites && data.sites.length > 0) {
           state.activeSiteId = data.sites[0].id;
           state.activeFloorId = data.sites[0].defaultFloor;
+        } else if (data.floors && data.floors.length > 0) {
+          state.activeFloorId = data.floors[0].id;
         }
         renderAll();
       })
@@ -64,17 +69,27 @@
     return ids;
   }
 
+  function hasSites() {
+    return !!(state.data.sites && state.data.sites.length > 0);
+  }
+
   function renderAll() {
     state.root.innerHTML = "";
     state.root.appendChild(renderHeader());
     if (state.pickMode) {
       state.root.appendChild(renderPickPanel());
     }
-    state.root.appendChild(renderSiteSection());
+    if (hasSites()) {
+      state.root.appendChild(renderSiteSection());
+    }
     state.root.appendChild(renderFloorSection());
-    state.root.appendChild(renderOptionsSection());
+    if (hasSites()) {
+      state.root.appendChild(renderOptionsSection());
+    }
     state.root.appendChild(renderFloorplan());
-    state.root.appendChild(renderLegend());
+    if (hasSites()) {
+      state.root.appendChild(renderLegend());
+    }
   }
 
   function renderHeader() {
@@ -136,7 +151,7 @@
     row.className = "t-button-row";
 
     const site = getActiveSite();
-    const markerFloors = getFloorsWithMarkers(site);
+    const markerFloors = site ? getFloorsWithMarkers(site) : {};
 
     state.data.floors.forEach(function (floor) {
       const btn = document.createElement("button");
@@ -230,7 +245,7 @@
 
     const img = document.createElement("img");
     img.className = "t-floorplan";
-    img.src = floor.image;
+    img.src = floor.image + "?v=" + ASSET_VERSION;
     img.alt = floor.label;
     wrap.appendChild(img);
 
@@ -262,7 +277,7 @@
     }
 
     const site = getActiveSite();
-    (site.reinforcements || []).forEach(function (m) {
+    ((site && site.reinforcements) || []).forEach(function (m) {
       if (m.floor !== state.activeFloorId) {
         return;
       }
