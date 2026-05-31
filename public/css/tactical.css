@@ -167,3 +167,17 @@
 .t-pick-active img.t-floorplan {
   cursor: crosshair;
 }
+
+.t-callout {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow:
+    -1px -1px 2px #000, 1px -1px 2px #000,
+    -1px 1px 2px #000, 1px 1px 2px #000,
+    0 0 4px #000;
+  pointer-events: none;
+}

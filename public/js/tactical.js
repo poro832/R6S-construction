@@ -241,6 +241,18 @@
       });
     }
 
+    const calloutLayer = document.createElement("div");
+    calloutLayer.className = "t-marker-layer";
+    (floor.callouts || []).forEach(function (c) {
+      const label = document.createElement("div");
+      label.className = "t-callout";
+      label.style.left = (c.x * 100) + "%";
+      label.style.top = (c.y * 100) + "%";
+      label.textContent = c.text;
+      calloutLayer.appendChild(label);
+    });
+    wrap.appendChild(calloutLayer);
+
     const layer = document.createElement("div");
     layer.className = "t-marker-layer";
 
