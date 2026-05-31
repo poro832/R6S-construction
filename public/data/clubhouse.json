@@ -1,0 +1,83 @@
+{
+  "mapId": "clubhouse",
+  "mapName": "Clubhouse",
+  "floors": [
+    {
+      "id": "basement",
+      "label": "지하",
+      "image": "clubhouse_b.jpg",
+      "callouts": [
+        { "x": 0.40, "y": 0.25, "text": "중계" },
+        { "x": 0.53, "y": 0.30, "text": "무기고" },
+        { "x": 0.48, "y": 0.48, "text": "교회" },
+        { "x": 0.39, "y": 0.58, "text": "오토바이" },
+        { "x": 0.60, "y": 0.50, "text": "블루" },
+        { "x": 0.74, "y": 0.55, "text": "블루계단" }
+      ]
+    },
+    {
+      "id": "1f",
+      "label": "1층",
+      "image": "clubhouse_1f.jpg",
+      "callouts": [
+        { "x": 0.50, "y": 0.12, "text": "냉장고" },
+        { "x": 0.45, "y": 0.22, "text": "중계" },
+        { "x": 0.56, "y": 0.25, "text": "주방" },
+        { "x": 0.36, "y": 0.35, "text": "화장실" },
+        { "x": 0.43, "y": 0.50, "text": "바" },
+        { "x": 0.55, "y": 0.50, "text": "스테이지" },
+        { "x": 0.68, "y": 0.45, "text": "창고" },
+        { "x": 0.33, "y": 0.56, "text": "당구" },
+        { "x": 0.18, "y": 0.72, "text": "스트립바" },
+        { "x": 0.24, "y": 0.90, "text": "탈의실" },
+        { "x": 0.56, "y": 0.63, "text": "로비" },
+        { "x": 0.70, "y": 0.60, "text": "라운지" },
+        { "x": 0.82, "y": 0.48, "text": "동계" },
+        { "x": 0.70, "y": 0.82, "text": "차고" }
+      ]
+    },
+    {
+      "id": "2f",
+      "label": "2층",
+      "image": "clubhouse_2f.jpg",
+      "callouts": [
+        { "x": 0.42, "y": 0.18, "text": "중계" },
+        { "x": 0.56, "y": 0.18, "text": "병참" },
+        { "x": 0.47, "y": 0.30, "text": "금고" },
+        { "x": 0.36, "y": 0.40, "text": "화장실" },
+        { "x": 0.56, "y": 0.42, "text": "공사장" },
+        { "x": 0.30, "y": 0.46, "text": "헬스" },
+        { "x": 0.43, "y": 0.46, "text": "침실" },
+        { "x": 0.64, "y": 0.46, "text": "현금" },
+        { "x": 0.78, "y": 0.44, "text": "동계" },
+        { "x": 0.62, "y": 0.62, "text": "CCTV" }
+      ]
+    }
+  ],
+  "sites": [
+    {
+      "id": "b-church-arsenal",
+      "label": "지하 교회/무기고",
+      "defaultFloor": "basement",
+      "reinforcements": []
+    },
+    {
+      "id": "2f-bedroom-gym",
+      "label": "2F 침실/헬스",
+      "defaultFloor": "2f",
+      "reinforcements": []
+    },
+    {
+      "id": "2f-cctv-cash",
+      "label": "2F CCTV/현금",
+      "defaultFloor": "2f",
+      "reinforcements": []
+    },
+    {
+      "id": "1f-bar-stock",
+      "label": "1F 바/창고",
+      "defaultFloor": "1f",
+      "reinforcements": []
+    }
+  ]
+}
