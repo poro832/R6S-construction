@@ -5,7 +5,8 @@
     data: null,
     root: null,
     activeSiteId: null,
-    activeFloorId: null
+    activeFloorId: null,
+    showReinforcements: true
   };
 
   function init() {
@@ -66,7 +67,9 @@
     state.root.appendChild(renderHeader());
     state.root.appendChild(renderSiteSection());
     state.root.appendChild(renderFloorSection());
+    state.root.appendChild(renderOptionsSection());
     state.root.appendChild(renderFloorplan());
+    state.root.appendChild(renderLegend());
   }
 
   function renderHeader() {
@@ -147,6 +150,35 @@
     return section;
   }
 
+  function renderOptionsSection() {
+    const options = document.createElement("div");
+    options.className = "t-options";
+
+    const checkboxLabel = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = state.showReinforcements;
+    checkbox.addEventListener("change", function () {
+      state.showReinforcements = checkbox.checked;
+      renderAll();
+    });
+    checkboxLabel.appendChild(checkbox);
+    checkboxLabel.appendChild(document.createTextNode(" 보강 표시"));
+
+    options.appendChild(checkboxLabel);
+    return options;
+  }
+
+  function renderLegend() {
+    const legend = document.createElement("div");
+    legend.className = "t-legend";
+    const swatch = document.createElement("span");
+    swatch.className = "swatch";
+    legend.appendChild(swatch);
+    legend.appendChild(document.createTextNode("추천 보강 위치"));
+    return legend;
+  }
+
   function renderFloorplan() {
     const wrap = document.createElement("div");
     wrap.className = "t-floorplan-wrap";
@@ -164,6 +196,11 @@
 
     const layer = document.createElement("div");
     layer.className = "t-marker-layer";
+
+    if (!state.showReinforcements) {
+      wrap.appendChild(layer);
+      return wrap;
+    }
 
     const site = getActiveSite();
     (site.reinforcements || []).forEach(function (m) {
