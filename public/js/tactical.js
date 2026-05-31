@@ -261,6 +261,7 @@
     (floor.callouts || []).forEach(function (c) {
       const label = document.createElement("div");
       label.className = "t-callout";
+      label.style.position = "absolute";
       label.style.left = (c.x * 100) + "%";
       label.style.top = (c.y * 100) + "%";
       label.textContent = c.text;
