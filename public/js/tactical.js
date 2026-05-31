@@ -10,7 +10,10 @@
     activeSiteId: null,
     activeFloorId: null,
     showReinforcements: true,
-    pickMode: false
+    pickMode: false,
+    picks: [],
+    pickName: "",
+    pickType: "callout"
   };
 
   function init() {
@@ -89,6 +92,9 @@
     state.root.appendChild(renderFloorplan());
     if (hasSites()) {
       state.root.appendChild(renderLegend());
+    }
+    if (state.pickMode) {
+      refreshPickOutput();
     }
   }
 
@@ -199,20 +205,97 @@
     return legend;
   }
 
+  function pickLine(p) {
+    if (p.type === "reinf") {
+      return '{ "floor": "' + p.floor + '", "x": ' + p.x.toFixed(3) +
+        ', "y": ' + p.y.toFixed(3) + ', "note": "' + p.text + '" },';
+    }
+    return '{ "x": ' + p.x.toFixed(3) + ', "y": ' + p.y.toFixed(3) +
+      ', "text": "' + p.text + '" },';
+  }
+
+  function refreshPickOutput() {
+    const ta = state.root.querySelector(".t-pick-output");
+    if (!ta) {
+      return;
+    }
+    const lines = state.picks
+      .filter(function (p) { return p.floor === state.activeFloorId; })
+      .map(pickLine);
+    ta.value = lines.join("\n");
+  }
+
   function renderPickPanel() {
     const panel = document.createElement("div");
     panel.className = "t-pick-panel";
 
     const title = document.createElement("div");
     title.className = "t-pick-title";
-    title.textContent = "좌표 찍기 모드 — 평면도를 클릭하면 좌표가 자동 복사됩니다";
-
-    const out = document.createElement("div");
-    out.className = "t-pick-output";
-    out.textContent = "(평면도를 클릭하세요)";
-
+    title.textContent = "라벨 편집기 — 이름을 입력하고 평면도의 해당 위치를 클릭하세요 (현재 층 기준)";
     panel.appendChild(title);
+
+    const controls = document.createElement("div");
+    controls.className = "t-pick-controls";
+
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.className = "t-pick-name";
+    nameInput.placeholder = "방 이름 (예: 차고)";
+    nameInput.value = state.pickName;
+    nameInput.addEventListener("input", function () {
+      state.pickName = nameInput.value;
+    });
+
+    const typeSel = document.createElement("select");
+    typeSel.className = "t-pick-type";
+    [["callout", "콜아웃(방이름)"], ["reinf", "보강 마커"]].forEach(function (o) {
+      const opt = document.createElement("option");
+      opt.value = o[0];
+      opt.textContent = o[1];
+      typeSel.appendChild(opt);
+    });
+    typeSel.value = state.pickType;
+    typeSel.addEventListener("change", function () {
+      state.pickType = typeSel.value;
+    });
+
+    const undoBtn = document.createElement("button");
+    undoBtn.type = "button";
+    undoBtn.className = "t-button";
+    undoBtn.textContent = "마지막 취소";
+    undoBtn.addEventListener("click", function () {
+      for (let i = state.picks.length - 1; i >= 0; i--) {
+        if (state.picks[i].floor === state.activeFloorId) {
+          state.picks.splice(i, 1);
+          break;
+        }
+      }
+      renderAll();
+    });
+
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "t-button";
+    copyBtn.textContent = "현재 층 복사";
+    copyBtn.addEventListener("click", function () {
+      const ta = state.root.querySelector(".t-pick-output");
+      if (ta && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ta.value).catch(function () {});
+      }
+    });
+
+    controls.appendChild(nameInput);
+    controls.appendChild(typeSel);
+    controls.appendChild(undoBtn);
+    controls.appendChild(copyBtn);
+    panel.appendChild(controls);
+
+    const out = document.createElement("textarea");
+    out.className = "t-pick-output";
+    out.readOnly = true;
+    out.rows = 6;
     panel.appendChild(out);
+
     return panel;
   }
 
@@ -223,15 +306,14 @@
     if (x < 0 || x > 1 || y < 0 || y > 1) {
       return;
     }
-    const line = '{ "floor": "' + state.activeFloorId + '", "x": ' +
-      x.toFixed(3) + ', "y": ' + y.toFixed(3) + ', "note": "" },';
-    const out = state.root.querySelector(".t-pick-output");
-    if (out) {
-      out.textContent = line;
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(line).catch(function () {});
-    }
+    state.picks.push({
+      floor: state.activeFloorId,
+      x: x,
+      y: y,
+      text: state.pickName,
+      type: state.pickType
+    });
+    renderAll();
   }
 
   function renderFloorplan() {
@@ -268,6 +350,32 @@
       calloutLayer.appendChild(label);
     });
     wrap.appendChild(calloutLayer);
+
+    if (state.pickMode) {
+      const pickLayer = document.createElement("div");
+      pickLayer.className = "t-marker-layer";
+      state.picks.forEach(function (p) {
+        if (p.floor !== state.activeFloorId) {
+          return;
+        }
+        const dot = document.createElement("div");
+        dot.className = "t-pick-dot";
+        dot.style.position = "absolute";
+        dot.style.left = (p.x * 100) + "%";
+        dot.style.top = (p.y * 100) + "%";
+        pickLayer.appendChild(dot);
+        if (p.text) {
+          const lab = document.createElement("div");
+          lab.className = "t-pick-mark-label";
+          lab.style.position = "absolute";
+          lab.style.left = (p.x * 100) + "%";
+          lab.style.top = (p.y * 100) + "%";
+          lab.textContent = p.text;
+          pickLayer.appendChild(lab);
+        }
+      });
+      wrap.appendChild(pickLayer);
+    }
 
     const layer = document.createElement("div");
     layer.className = "t-marker-layer";
