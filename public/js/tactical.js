@@ -6,7 +6,8 @@
     root: null,
     activeSiteId: null,
     activeFloorId: null,
-    showReinforcements: true
+    showReinforcements: true,
+    pickMode: false
   };
 
   function init() {
@@ -21,6 +22,7 @@
       return;
     }
     state.root = root;
+    state.pickMode = new URLSearchParams(window.location.search).has("pick");
     fetch("../data/" + mapId + ".json")
       .then(function (res) {
         if (!res.ok) {
@@ -65,6 +67,9 @@
   function renderAll() {
     state.root.innerHTML = "";
     state.root.appendChild(renderHeader());
+    if (state.pickMode) {
+      state.root.appendChild(renderPickPanel());
+    }
     state.root.appendChild(renderSiteSection());
     state.root.appendChild(renderFloorSection());
     state.root.appendChild(renderOptionsSection());
@@ -179,6 +184,41 @@
     return legend;
   }
 
+  function renderPickPanel() {
+    const panel = document.createElement("div");
+    panel.className = "t-pick-panel";
+
+    const title = document.createElement("div");
+    title.className = "t-pick-title";
+    title.textContent = "좌표 찍기 모드 — 평면도를 클릭하면 좌표가 자동 복사됩니다";
+
+    const out = document.createElement("div");
+    out.className = "t-pick-output";
+    out.textContent = "(평면도를 클릭하세요)";
+
+    panel.appendChild(title);
+    panel.appendChild(out);
+    return panel;
+  }
+
+  function handlePickClick(img, e) {
+    const rect = img.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    if (x < 0 || x > 1 || y < 0 || y > 1) {
+      return;
+    }
+    const line = '{ "floor": "' + state.activeFloorId + '", "x": ' +
+      x.toFixed(3) + ', "y": ' + y.toFixed(3) + ', "note": "" },';
+    const out = state.root.querySelector(".t-pick-output");
+    if (out) {
+      out.textContent = line;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(line).catch(function () {});
+    }
+  }
+
   function renderFloorplan() {
     const wrap = document.createElement("div");
     wrap.className = "t-floorplan-wrap";
@@ -193,6 +233,13 @@
     img.src = floor.image;
     img.alt = floor.label;
     wrap.appendChild(img);
+
+    if (state.pickMode) {
+      wrap.classList.add("t-pick-active");
+      wrap.addEventListener("click", function (e) {
+        handlePickClick(img, e);
+      });
+    }
 
     const layer = document.createElement("div");
     layer.className = "t-marker-layer";

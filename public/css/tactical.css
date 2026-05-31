@@ -138,3 +138,32 @@
   margin-right: 6px;
   vertical-align: middle;
 }
+
+.t-pick-panel {
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: #1a2a1a;
+  border: 1px solid #3a5a3a;
+  border-radius: 4px;
+}
+
+.t-pick-title {
+  font-size: 13px;
+  color: #9c9;
+  margin-bottom: 6px;
+}
+
+.t-pick-output {
+  font-family: monospace;
+  font-size: 14px;
+  color: #cfc;
+  background: #0a140a;
+  padding: 8px 10px;
+  border-radius: 4px;
+  user-select: all;
+  word-break: break-all;
+}
+
+.t-pick-active img.t-floorplan {
+  cursor: crosshair;
+}
