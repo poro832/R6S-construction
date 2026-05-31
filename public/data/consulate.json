@@ -11,25 +11,46 @@
       "id": "basement-garage-cafeteria",
       "label": "지하 차고/식당",
       "defaultFloor": "basement",
-      "reinforcements": []
+      "reinforcements": [
+        { "floor": "basement", "x": 0.046, "y": 0.575, "note": "차고 서쪽 외벽" },
+        { "floor": "basement", "x": 0.315, "y": 0.630, "note": "차고-식당 사이 벽" },
+        { "floor": "basement", "x": 0.315, "y": 0.780, "note": "식당 하단 벽" },
+        { "floor": "basement", "x": 0.400, "y": 0.535, "note": "식당-CCTV 벽" },
+        { "floor": "basement", "x": 0.500, "y": 0.625, "note": "식당 동쪽 벽" },
+        { "floor": "1f", "x": 0.430, "y": 0.700, "note": "1층 로비 바닥 해치(지하 천장)" }
+      ]
     },
     {
-      "id": "1f-lobby-piano",
-      "label": "1F 로비/피아노",
+      "id": "1f-tellers-visa",
+      "label": "1F 창구/비자",
       "defaultFloor": "1f",
-      "reinforcements": []
+      "reinforcements": [
+        { "floor": "1f", "x": 0.520, "y": 0.400, "note": "창구 상단(원계 쪽) 벽" },
+        { "floor": "1f", "x": 0.500, "y": 0.520, "note": "창구 좌측(로비 쪽) 벽" },
+        { "floor": "1f", "x": 0.665, "y": 0.520, "note": "창구-비자 사이 벽" },
+        { "floor": "1f", "x": 0.620, "y": 0.620, "note": "창구 하단(직계 쪽) 벽" }
+      ]
     },
     {
-      "id": "2f-meeting-front",
-      "label": "2F 회의실/접수처",
+      "id": "2f-meeting-desk",
+      "label": "2F 회의실/중앙데스크",
       "defaultFloor": "2f",
-      "reinforcements": []
+      "reinforcements": [
+        { "floor": "2f", "x": 0.500, "y": 0.530, "note": "중앙데스크-회의실 벽" },
+        { "floor": "2f", "x": 0.330, "y": 0.550, "note": "회의실 좌측(커넥터 쪽) 벽" },
+        { "floor": "2f", "x": 0.600, "y": 0.560, "note": "회의실 우측(냉장고/TV 쪽) 벽" }
+      ]
     },
     {
-      "id": "2f-archives-tellers",
-      "label": "2F 영사실/관사",
+      "id": "2f-consul-reception",
+      "label": "2F 영사실/접수처",
       "defaultFloor": "2f",
-      "reinforcements": []
+      "reinforcements": [
+        { "floor": "2f", "x": 0.055, "y": 0.500, "note": "접수처 서쪽 외벽" },
+        { "floor": "2f", "x": 0.165, "y": 0.500, "note": "접수처-영사실 벽" },
+        { "floor": "2f", "x": 0.265, "y": 0.600, "note": "영사실-커넥터 벽" },
+        { "floor": "2f", "x": 0.220, "y": 0.370, "note": "접수처-화장실 벽" }
+      ]
     }
   ]
 }
